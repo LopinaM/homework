@@ -21,13 +21,11 @@ export const UserList = (props: UserListPropsType) => {
 
       <ul>
         {props.users.map((user) => (
-          <>
+          <li key={user.id} id={`hw01-user-${user.id}`}>
             <strong>{user.name}</strong> (Age: {user.age})
             <strong> Address:</strong>
-            <li key={user.id} id={`hw01-user-${user.id}`}>
-              {user.address.street}, {user.address.city}
-            </li>
-          </>
+            {user.address.street}, {user.address.city}
+          </li>
         ))}
       </ul>
     </div>
