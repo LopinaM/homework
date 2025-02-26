@@ -1,0 +1,21 @@
+.App {
+  --header_height: 60px;
+  padding: 20px 70px 0;
+  /*background-color: #eeeeee;*/
+}
+
+.hw {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.hwTitle {
+  color: #000;
+  font-family: Montserrat, serif;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  margin: 120px 0 34px;
+}

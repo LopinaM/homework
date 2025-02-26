@@ -1,0 +1,17 @@
+.radio {
+}
+
+.radio::before {
+}
+
+.radio:checked::before {
+}
+
+.label {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.options {
+}

@@ -1,0 +1,20 @@
+.buttonsContainer {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.clock {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.watch {
+}
+
+.watch strong {
+}
+
+.more {
+}
