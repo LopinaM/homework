@@ -1,114 +1,144 @@
-import React, {useState} from 'react'
-import s2 from '../../s1-main/App.module.css'
-import s from './HW13.module.css'
-import SuperButton from '../hw04/common/c2-SuperButton/SuperButton'
-import axios from 'axios'
-import success200 from './images/200.svg'
-import error400 from './images/400.svg'
-import error500 from './images/500.svg'
-import errorUnknown from './images/error.svg'
+import React, { useState } from "react";
+import s2 from "../../s1-main/App.module.css";
+import s from "./HW13.module.css";
+import SuperButton from "../hw04/common/c2-SuperButton/SuperButton";
+import axios, { AxiosError } from "axios";
+import success200 from "./images/200.svg";
+import error400 from "./images/400.svg";
+import error500 from "./images/500.svg";
+import errorUnknown from "./images/error.svg";
 
 /*
-* 1 - дописать функцию send
-* 2 - дизэйблить кнопки пока идёт запрос
-* 3 - сделать стили в соответствии с дизайном
-* */
+ * 1 - дописать функцию send
+ * 2 - дизэйблить кнопки пока идёт запрос
+ * 3 - сделать стили в соответствии с дизайном
+ * */
 
 const HW13 = () => {
-    const [code, setCode] = useState('')
-    const [text, setText] = useState('')
-    const [info, setInfo] = useState('')
-    const [image, setImage] = useState('')
+  const [code, setCode] = useState("");
+  const [text, setText] = useState("");
+  const [info, setInfo] = useState("");
+  const [image, setImage] = useState("");
 
-    const send = (x?: boolean | null) => () => {
-        const url =
-            x === null
-                ? 'https://xxxxxx.ccc' // имитация запроса на не корректный адрес
-                : 'https://samurai.it-incubator.io/api/3.0/homework/test'
+  const [isLoading, setIsLoading] = useState(false);
 
-        setCode('')
-        setImage('')
-        setText('')
-        setInfo('...loading')
+  const send = (x?: boolean | null) => () => {
+    setIsLoading(true);
+    const url =
+      x === null
+        ? "https://xxxxxx.ccc" // имитация запроса на не корректный адрес
+        : "https://samurai.it-incubator.io/api/3.0/homework/test";
 
-        axios
-            .post(url, {success: x})
-            .then((res) => {
-                setCode('Код 200!')
-                setImage(success200)
-                // дописать
+    setCode("");
+    setImage("");
+    setText("");
+    setInfo("...loading");
 
-            })
-            .catch((e) => {
-                // дописать
+    axios
+      .post(url, { success: x })
+      .then((res) => {
+        setCode("Код 200!");
+        setImage(success200);
+        setInfo(res.data.info);
+        setText(res.data.errorText);
+      })
+      .catch((e) => {
+        // if (e.response) {
+        //   setCode(`Код ${e.response.status}!`);
+        //   setImage(e.response.status === 400 ? error400 : error500);
+        //   setInfo(e.response.data.info);
+        //   setText(e.response.data.errorText);
+        // } else if (e.request) {
+        //   setImage(errorUnknown);
+        // setCode("Error!");
+        // setInfo("Network Error AxiosError");
+        // }
 
-            })
-    }
+        const error = e as Error | AxiosError;
 
-    return (
-        <div id={'hw13'}>
-            <div className={s2.hwTitle}>Homework #13</div>
+        if (axios.isAxiosError(error)) {
+          if (error.response) {
+            setCode(`Код ${e.response.status}!`);
+            setImage(e.response.status === 400 ? error400 : error500);
+            setInfo(e.response.data.info);
+            setText(e.response.data.errorText);
+          } else if (error.request) {
+            setCode("Error!");
+            setInfo("Network Error AxiosError");
+          }
+        }
 
-            <div className={s2.hw}>
-                <div className={s.buttonsContainer}>
-                    <SuperButton
-                        id={'hw13-send-true'}
-                        onClick={send(true)}
-                        xType={'secondary'}
-                        // дописать
+        setImage(errorUnknown);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
-                    >
-                        Send true
-                    </SuperButton>
-                    <SuperButton
-                        id={'hw13-send-false'}
-                        onClick={send(false)}
-                        xType={'secondary'}
-                        // дописать
+  return (
+    <div id={"hw13"}>
+      <div className={s2.hwTitle}>Homework #13</div>
 
-                    >
-                        Send false
-                    </SuperButton>
-                    <SuperButton
-                        id={'hw13-send-undefined'}
-                        onClick={send(undefined)}
-                        xType={'secondary'}
-                        // дописать
-
-                    >
-                        Send undefined
-                    </SuperButton>
-                    <SuperButton
-                        id={'hw13-send-null'}
-                        onClick={send(null)} // имитация запроса на не корректный адрес
-                        xType={'secondary'}
-                        // дописать
-
-                    >
-                        Send null
-                    </SuperButton>
-                </div>
-
-                <div className={s.responseContainer}>
-                    <div className={s.imageContainer}>
-                        {image && <img src={image} className={s.image} alt="status"/>}
-                    </div>
-
-                    <div className={s.textContainer}>
-                        <div id={'hw13-code'} className={s.code}>
-                            {code}
-                        </div>
-                        <div id={'hw13-text'} className={s.text}>
-                            {text}
-                        </div>
-                        <div id={'hw13-info'} className={s.info}>
-                            {info}
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div className={s2.hw}>
+        <div className={s.buttonsContainer}>
+          <SuperButton
+            id={"hw13-send-true"}
+            onClick={send(true)}
+            xType={"secondary"}
+            // дописать
+            disabled={isLoading}
+          >
+            Send true
+          </SuperButton>
+          <SuperButton
+            id={"hw13-send-false"}
+            onClick={send(false)}
+            xType={"secondary"}
+            // дописать
+            disabled={isLoading}
+          >
+            Send false
+          </SuperButton>
+          <SuperButton
+            id={"hw13-send-undefined"}
+            onClick={send(undefined)}
+            xType={"secondary"}
+            // дописать
+            disabled={isLoading}
+          >
+            Send undefined
+          </SuperButton>
+          <SuperButton
+            id={"hw13-send-null"}
+            onClick={send(null)} // имитация запроса на не корректный адрес
+            xType={"secondary"}
+            // дописать
+            disabled={isLoading}
+          >
+            Send null
+          </SuperButton>
         </div>
-    )
-}
 
-export default HW13
+        <div className={s.responseContainer}>
+          <div className={s.imageContainer}>
+            {image && <img src={image} className={s.image} alt="status" />}
+          </div>
+
+          <div className={s.textContainer}>
+            <div id={"hw13-code"} className={s.code}>
+              {code}
+            </div>
+            <div id={"hw13-text"} className={s.text}>
+              {text}
+            </div>
+            <div id={"hw13-info"} className={s.info}>
+              {info}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default HW13;
